@@ -11,32 +11,39 @@ const Signup = () => {
   const darkTheme = 'flex w-screen flex-wrap text-slate-800 h-[90vh]';
 
   const signIn = async (values) => {
-    try {
-      const res = await fetch('http://localhost:5143/users/signup', {
-        method: 'POST', // ✅ Corrected typo
-        headers: {
-          'Content-Type': 'application/json', // ✅ Ensure content type is JSON
-        },
-        body: JSON.stringify(values), // ✅ Convert object to JSON
-      });
-
-      const data = await res.json();
-      console.log('Response:', data);
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Signup failed');
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
+  const requestBody = {
+    userName: values.name,   // ✅ Fix: map `name` to `userName`
+    email: values.email,
+    password: values.password,
   };
+
+  try {
+    const res = await fetch('http://localhost:5000/users/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const data = await res.json();
+    console.log('Response:', data);
+
+    if (!res.ok) {
+      throw new Error(data.message || 'Signup failed');
+    }
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      email: '',
-      password: '',
-    },
+  userName: '', // change from 'name'
+  email: '',
+  password: '',
+},
     validationSchema: signupSchema,
     onSubmit: (values, action) => {
       console.log('Form submitted with values:', values);
@@ -97,17 +104,18 @@ const Signup = () => {
               <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
                 <input
                   type="text"
-                  id="name"
-                  name="name" // ✅ Added `name` attribute
+  id="userName"
+  name="userName"  // ✅ Added `name` attribute
                   className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none"
                   placeholder="Name"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.name}
+                  value={formik.values.userName}
+
                 />
               </div>
-              {formik.touched.name && formik.errors.name ? (
-                <div className="text-red-600 text-sm">{formik.errors.name}</div>
+              {formik.touched.userName && formik.errors.userName ? (
+                <div className="text-red-600 text-sm">{formik.errors.userName}</div>
               ) : null}
             </div>
 

@@ -3,13 +3,39 @@ import { useFormik } from 'formik';
 import { loginSchema } from '../utility/validation-schema.utility';
 
 const Login = () => {
+  const loginUser = async (values) => {
+    try {
+      const res = await fetch('http://localhost:5143/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      alert('Login successful!');
+      // Optional: Store token or user data
+      // localStorage.setItem('token', data.token);
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
     validationSchema: loginSchema,
-    onSubmit: (values, action) => {
+    onSubmit: async (values, action) => {
+      await loginUser(values);
       action.resetForm();
     },
   });
@@ -17,7 +43,7 @@ const Login = () => {
   return (
     <>
       <div className="flex w-screen flex-wrap text-slate-800 bg-white">
-        <div className="flex w-full flex-col md:w-1/2 ">
+        <div className="flex w-full flex-col md:w-1/2">
           <div className="flex justify-center pt-12 md:justify-start md:pl-12">
             <a href="#" className="text-2xl font-bold text-blue-600">
               ShopEase
@@ -48,12 +74,13 @@ const Login = () => {
                     value={formik.values.email}
                   />
                 </div>
-                {formik.touched.email && formik.errors.email ? (
+                {formik.touched.email && formik.errors.email && (
                   <p className="text-red-600 ml-1 capitalize">
                     {formik.errors.email}
                   </p>
-                ) : null}
+                )}
               </div>
+
               <div className="mb-4 flex flex-col pt-4">
                 <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
                   <input
@@ -66,11 +93,11 @@ const Login = () => {
                     onChange={formik.handleChange}
                   />
                 </div>
-                {formik.touched.password && formik.errors.password ? (
+                {formik.touched.password && formik.errors.password && (
                   <p className="text-red-600 ml-1 capitalize">
                     {formik.errors.password}
                   </p>
-                ) : null}
+                )}
               </div>
 
               <a
@@ -79,6 +106,7 @@ const Login = () => {
               >
                 Forgot password?
               </a>
+
               <button
                 type="submit"
                 className="rounded-lg bg-blue-600 px-4 py-2 text-center text-base font-semibold text-white shadow-md outline-none ring-blue-500 ring-offset-2 transition hover:bg-blue-700 focus:ring-2 md:w-32"
@@ -86,9 +114,10 @@ const Login = () => {
                 Sign in
               </button>
             </form>
+
             <div className="py-12 text-center">
               <p className="text-gray-600">
-                Don&apos;t have an account ? {''}
+                Don&apos;t have an account?{' '}
                 <Link
                   to="/signup"
                   className="whitespace-nowrap font-semibold text-gray-900 underline underline-offset-4"
@@ -99,11 +128,13 @@ const Login = () => {
             </div>
           </div>
         </div>
-        <div className="relative hidde h-[90vh] select-none bg-blue-600 bg-gradient-to-br md:block md:w-1/2">
+
+        <div className="relative hidden h-[90vh] select-none bg-blue-600 bg-gradient-to-br md:block md:w-1/2">
           <div className="py-6 px-8 text-white xl:w-[40rem] w-full h-full">
             <img
               className="ml-8 w-full h-[80vh] rounded-lg object-cover"
               src="https://images.unsplash.com/photo-1573855619003-97b4799dcd8b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Login visual"
             />
           </div>
         </div>

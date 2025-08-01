@@ -15,28 +15,16 @@ import Login from './pages/Login.jsx';
 // import Food from "./Food.jsx";
 
 let Food = lazy(() => import('./Food.jsx'));
-
 let Router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
     children: [
       { path: '/', element: <Home /> },
-
       { path: '/about', element: <About /> },
-
-      {
-        path: '/contact',
-        element: <Contact />,
-      },
-      {
-        path: '/cart',
-        element: <Cart />,
-      },
-      {
-        path: '/product/:id',
-        element: <SingleProduct />,
-      },
+      { path: '/contact', element: <Contact /> },
+      { path: '/cart', element: <Cart /> },
+      { path: '/product/:id', element: <SingleProduct /> },
       {
         path: '/food',
         element: (
@@ -45,18 +33,13 @@ let Router = createBrowserRouter([
           </Suspense>
         ),
       },
+      { path: '/login', element: <Login /> },
+      { path: '/signup', element: <Signup /> },
     ],
-    errorElement: <ErrorPage></ErrorPage>,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/Signup',
-    element: <Signup />,
+    errorElement: <ErrorPage />,
   },
 ]);
+
 
 createRoot(document.getElementById('root')).render(
   <ThemeContext>

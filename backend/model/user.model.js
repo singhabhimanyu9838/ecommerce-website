@@ -11,7 +11,8 @@ const Address = new Schema({
 });
 
 const UserSchema = new Schema({
-  userName: { type: String, required: true },
+  UserName: { type: String, required: true }
+,
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, min: [6, 'password is too short'] },
   phoneNumber: { type: String },
